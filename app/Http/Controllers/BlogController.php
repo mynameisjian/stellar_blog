@@ -6,8 +6,17 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\Blog as Blog;
+
 class BlogController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,6 +25,8 @@ class BlogController extends Controller
     public function index()
     {
         
+        return \View::make('blogs.index')->with('blogs', Blog::all());
+
     }
 
     /**
@@ -25,7 +36,7 @@ class BlogController extends Controller
      */
     public function create()
     {
-        //
+        return \View::make('blogs.create');
     }
 
     /**
@@ -36,7 +47,37 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $rules = array(
+
+            'title' => 'required',
+
+        );
+
+        $v = \Validator::make($request->all(), $rules);
+
+        if ($v->fails())
+        {
+
+            return \Redirect::to('blog/create')->withErrors($v->errors());
+
+        } 
+        else
+        {
+            $blog = new Blog();
+
+            $blog->title = $request->get('title');
+
+            $blog->user_id = \Auth::user()->id;
+
+            $blog->save();
+
+            \Session::flash('message', 'Blog created');
+
+            return \Redirect::to('blog/create');
+
+        }
+
     }
 
     /**
