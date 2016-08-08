@@ -48,4 +48,9 @@ class Blog extends Model
 
     }
 
+    public function scopeActive($query)
+    {
+        return $query->whereActive(1);
+    }
+
 }

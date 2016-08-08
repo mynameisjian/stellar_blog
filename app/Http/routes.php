@@ -11,12 +11,18 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'BlogFrontendController@index');
+
+Route::get('/blog-details/{id}', 'BlogFrontendController@details');
+
+// Route::get('/', function () {
+
+//     return view('welcome');
+
+// });
 
 Route::resource('blog', 'BlogController');
 
 Route::auth();
 
-Route::get('/home', 'HomeController@index');
+// Route::get('/home', 'HomeController@index');
