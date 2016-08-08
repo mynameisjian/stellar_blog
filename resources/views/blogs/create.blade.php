@@ -4,24 +4,6 @@
 	
 	<h3>Create Blog</h3>
 
-	@if (count($errors) > 0)
-
-	    <div class="alert alert-danger">
-
-	        <ul>
-
-	            @foreach ($errors->all() as $error)
-
-	                <li>{{ $error }}</li>
-
-	            @endforeach
-
-	        </ul>
-
-	    </div>
-
-	@endif
-
 	{!! Form::open(array('url' => 'blog')) !!}
 
 		<div class="form-group">
@@ -29,6 +11,23 @@
 			{!! Form::label('title', 'Title') !!}
 
 			{!! Form::text('title', old('title'), array('class' => 'form-control')) !!}
+
+	    </div>
+
+	    <div class="form-group">
+			
+			{!! Form::label('active', 'Active') !!}
+
+			{!! Form::radio('active', 1 , old('active') == 1 ? true : false ) !!} Yes {!! Form::radio('active', 0 , old('active') == 0 ? true : false) !!} No
+				
+
+	    </div>
+
+	    <div class="form-group">
+			
+			{!! Form::label('body', 'Body') !!}
+
+			{!! Form::textarea('body', old('body'), array('class' => 'form-control')) !!}	
 
 	    </div>
 

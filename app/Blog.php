@@ -13,7 +13,7 @@ class Blog extends Model
 
 	protected $table = 'blogs';	
 
-	protected $dates = ['deleted_at'];
+	protected $dates = ['deleted_at', 'published_at'];
 
 	public function user()
 	{
@@ -21,5 +21,31 @@ class Blog extends Model
 		return $this->belongsTo('App\User');
 
 	}	
+
+	public function setPublishedAtAttribute($value)
+    {
+
+        $this->attributes['published_at'] = \Carbon\Carbon::parse($value)->format('Y-m-d H:i:m');
+
+    }
+
+    public function getPublishedAtAttribute($value)
+    {
+    	return \Carbon\Carbon::parse($value)->format('m-d-Y H:i:s');
+    }
+
+    public function getCreatedAtAttribute()
+    {
+
+    	return \Carbon\Carbon::parse($value)->format('m-d-Y H:i:s');
+
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+
+    	return \Carbon\Carbon::parse($value)->format('m-d-Y H:i:s');
+
+    }
 
 }

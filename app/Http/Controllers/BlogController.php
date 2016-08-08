@@ -52,6 +52,10 @@ class BlogController extends Controller
 
             'title' => 'required',
 
+            'active' => 'required',
+
+            'body' => 'required'
+
         );
 
         $v = \Validator::make($request->all(), $rules);
@@ -59,7 +63,7 @@ class BlogController extends Controller
         if ($v->fails())
         {
 
-            return \Redirect::to('blog/create')->withErrors($v->errors());
+            return \Redirect::to('blog/create')->withInput()->withErrors($v->errors());
 
         } 
         else
@@ -70,11 +74,17 @@ class BlogController extends Controller
 
             $blog->user_id = \Auth::user()->id;
 
+            $blog->published_at = date('Y-m-d H:i:s');
+
+            $blog->body = $request->get('body');
+
+            $blog->active = $request->get('active');
+
             $blog->save();
 
             \Session::flash('message', 'Blog created');
 
-            return \Redirect::to('blog/create');
+            return \Redirect::to('blog');
 
         }
 
@@ -88,7 +98,9 @@ class BlogController extends Controller
      */
     public function show($id)
     {
-        //
+        $blog = Blog::find($id);
+
+        return \View::make('blogs.show')->with('blog', $blog);
     }
 
     /**
@@ -99,7 +111,9 @@ class BlogController extends Controller
      */
     public function edit($id)
     {
-        //
+
+        return \View::make('blogs.edit')->with('blog', Blog::find($id));
+
     }
 
     /**
@@ -111,7 +125,45 @@ class BlogController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $rules = array(
+
+            'title' => 'required',
+
+            'active' => 'required',
+
+            'body' => 'required'
+
+        );
+
+        $v = \Validator::make($request->all(), $rules);
+
+        if ($v->fails())
+        {
+
+            return \Redirect::to('blog/'.$id.'/edit')->withInput()->withErrors($v->errors());
+
+        } 
+        else
+        {
+            $blog = Blog::find($id);
+
+            $blog->title = $request->get('title');
+
+            $blog->user_id = \Auth::user()->id;
+
+            $blog->body = $request->get('body');
+
+            $blog->active = $request->get('active');
+
+            $blog->save();
+
+            \Session::flash('message', 'Blog updated');
+
+            return \Redirect::to('blog');
+
+        }
+
     }
 
     /**
@@ -124,4 +176,5 @@ class BlogController extends Controller
     {
         //
     }
+
 }
